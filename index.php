@@ -5,6 +5,13 @@
     ini_set('display_startup_errors', '1');
     error_reporting(E_ALL);
 
+    $action = isset($_GET["a"]) ? $_GET["a"] : "";
+    if($action == "d") {
+        session_destroy();
+        header("Location: index.php");
+        exit;
+    }
+
     // logout
     if(isset($_GET["iesire"])) {
         //session_destroy();
@@ -40,7 +47,9 @@
                 // userul e autentificat cu succes
                 $user = $result->fetch_assoc();
                 $_SESSION["user"]["type"] = "student";
+                $_SESSION["user"]["cursuri"] = $user["cursuri"];
                 $_SESSION["login_time"] = time();
+                $_SESSION["user"]["id"] = $user["id"];
                 
                 header("Location: student/s_dashboard.php");
                 exit;
@@ -60,7 +69,7 @@
                 
                 // userul e autentificat cu succes
                 $user = $result->fetch_assoc();
-                $_SESSION["user"]["type"] = "student";
+                $_SESSION["user"]["type"] = "profesor";
                 $_SESSION["login_time"] = time();
                 
                 header("Location: profesor/p_dashboard.php");
@@ -94,7 +103,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col">
-                            <img src="/assets/imagini/login.png" alt="imagineLogin">
+                            <img src="/assets/img/illustrations/login.png" alt="imagineLogin">
                         </div>
                         <div class="col">
                             <h2>Bine ai revenit!</h2>
