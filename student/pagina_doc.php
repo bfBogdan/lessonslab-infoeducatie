@@ -40,8 +40,7 @@
             <div class="container flex-lg-row flex-nowrap align-items-center">
                 <div class="navbar-brand w-100">
                 <a href="../index.php">
-                    <!-- <img src="./assets/img/logo.png" srcset="./assets/img/logo@2x.png 2x" alt="" /> -->
-                    <h2>LessonsLab</h2>
+                    <img src="/logo.png" srcset="/logo.png 2x" alt="" />
                 </a>
                 </div>
                 <div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">

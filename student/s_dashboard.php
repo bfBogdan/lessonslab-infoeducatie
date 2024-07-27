@@ -43,9 +43,8 @@
         <nav class="navbar navbar-expand-lg classic navbar-light navbar-bg-light">
             <div class="container flex-lg-row flex-nowrap align-items-center">
                 <div class="navbar-brand w-100">
-                <a href="./index.html">
-                    <!-- <img src="./assets/img/logo.png" srcset="./assets/img/logo@2x.png 2x" alt="" /> -->
-                     <h2>LessonsLab</h2>
+                <a href="../index.html">
+                    <img src="/logo.png" srcset="/logo.png 2x" alt="" />
                 </a>
                 </div>
                 <div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">
@@ -124,7 +123,6 @@
                     $result = QueryDB($query);
                     if($result->num_rows > 1) {
                         $cursuri = $result->fetch_assoc();
-                        var_dump($cursuri);
                     }
                     else if ($result->num_rows == 1) {
                         $cursuri = [$result->fetch_assoc()];
@@ -149,33 +147,39 @@
                     echo '<div class="swiper-wrapper">';
                     $counter = 0;
                     $val_lectii_curs = array();
+                    $cursuri_finalizate = array();
                     $idLectii = explode(',', $idLectii);
                     
                     $counter = 0;
                     foreach($cursuri as $curs) {
                         // preluare progres curs
-                        $query = 'SELECT * FROM `sectiuni` WHERE `id` = '.$idLectii[$counter];
-                        $result = QueryDB($query);
-                        if($result->num_rows != 0) {
-                            $lectii_curs = $result->fetch_assoc();
-                            array_push($val_lectii_curs, [$lectii_curs, $curs]);
+                        if($idLectii[$counter] == -1) {
+                            array_push($cursuri_finalizate, $curs);
+                            $counter++;
                         }
+                        else{
+                            $query = 'SELECT * FROM `sectiuni` WHERE `id` = '.$idLectii[$counter];
+                            $result = QueryDB($query);
+                            if($result->num_rows != 0) {
+                                $lectii_curs = $result->fetch_assoc();
+                                array_push($val_lectii_curs, [$lectii_curs, $curs]);
 
-                        echo '<div class="swiper-slide" style="max-height: 100px;">';
-                        echo '<div class="col">';
-                        echo '<div class="card d-flex align-items-stretch mt-5" >';
-                        echo '<div class="card-body">';
-                        echo '<i class="'.$curs['icon'].'" style="font-size: 2rem;"></i>';
-                        echo '<h5 class="card-title mt-3">'.$curs['nume'].'</h5>';
-                        echo '<p class="card-text">'.$curs['descriere'].'</p>';
-                        //echo '<div class="progress"> <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="'.$curs['progres'].'"></div></div>'
-                        echo '<a href="pagina_curs.php?id='.$curs['id'].'&sc='.$idLectii[$counter].'" class="btn btn-primary">Detalii</a>';
-                        echo '</div>';
-                        echo '</div>';
-                        echo '</div>';
-                        echo '</div>';
-
-                        $counter++;
+                                echo '<div class="swiper-slide" style="max-height: 100px;">';
+                                echo '<div class="col">';
+                                echo '<div class="card d-flex align-items-stretch mt-5" >';
+                                echo '<div class="card-body">';
+                                echo '<i class="'.$curs['icon'].'" style="font-size: 2rem;"></i>';
+                                echo '<h5 class="card-title mt-3">'.$curs['nume'].'</h5>';
+                                echo '<p class="card-text">'.$curs['descriere'].'</p>';
+                                //echo '<div class="progress"> <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="'.$curs['progres'].'"></div></div>'
+                                echo '<a href="pagina_curs.php?id='.$curs['id'].'&sc='.$idLectii[$counter].'" class="btn btn-primary">Detalii</a>';
+                                echo '</div>';
+                                echo '</div>';
+                                echo '</div>';
+                                echo '</div>';
+                            }
+                            $counter++;
+                        }
                     }
                     echo '</div>';
                     echo '</div>';
@@ -193,6 +197,8 @@
 
                 // daca exista lectii active...
                 else {
+                    echo '<div class="row">';
+                    echo '<div class="col">';
                     echo '<h3 class="mb-4">Continua lectiile</h3>';
                     echo '<a href="#" class="card mb-4 lift">';
                     foreach($val_lectii_curs as $lectie) {
@@ -212,14 +218,37 @@
                         </div>
                         <?php
                     }
+                    echo '</a>';
+                    echo '</div>';
+                    echo '<div class="col">';
+                    echo '<h3 class="mb-4">Lectii finalizate</h3>';
+                    echo '<a href="#" class="card mb-4 lift">';
+                    foreach($cursuri_finalizate as $curs) {
+                        echo '<div class="card-body p-5">';
+                        echo '<span class="row justify-content-between align-items-center">';
+                        echo '<span class="col-md-5 mb-2 mb-md-0 d-flex align-items-center text-body">';
+                        echo '<span class="avatar bg-red text-white w-9 h-9 fs-17 me-3"><i class="'.$curs['icon'].'"></i></span>'.$curs['nume'].'</span>';
+                        echo '<span class="col-5 col-md-3 text-body d-flex align-items-center">';
+                        echo '<i class="bi bi-file-earmark-post me-1"></i> '.$curs['nume'].'</span>';
+                        echo '<span class="col-7 col-md-4 col-lg-3 text-body d-flex align-items-center">';
+                        echo '<i class="uil uil-clock me-1"></i> '.$curs['read_time'].' min</span>';
+                        echo '<span class="d-none d-lg-block col-1 text-center text-body">';
+                        echo '<i class="uil uil-angle-right-b"></i>';
+                        echo '</span>';
+                        echo '</span>';
+                        echo '</div>';
+                    }
+                    echo '</a>';
+                    echo '</div>';
+                    echo '</div>';
                 }
-            ?>
+                ?>
             <!-- /. Sectiunea continua lectiile -->
         
         </div>
 
          <!-- Scripturi design bootstrap -->
-         <script src="/assets/js/plugins.js"></script>
-         <script src="/assets/js/theme.js"></script>
+         <script src="../assets/js/plugins.js"></script>
+         <script src="../assets/js/theme.js"></script>
     </body>
 </html>
